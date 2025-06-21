@@ -80,13 +80,10 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     isBestseller,
     originalPrice,
     discountPercentage,
-
   } = product;
 
   return (
-    <Link
-      href={`/products/${product.documentId}`}
-    >
+    <Link href={`/products/${product.documentId}`}>
       <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group cursor-pointer">
         {/* Product Image Container */}
         <div className="relative w-full aspect-square bg-gradient-to-br from-purple-100 to-pink-100 overflow-hidden">
@@ -222,7 +219,7 @@ const LoadingSkeleton: React.FC = () => (
 );
 
 const ProductGrid: React.FC<ProductGridProps> = ({
-  apiUrl = "http://localhost:1337/api/products?populate=*",
+  apiUrl = "https://majestic-symphony-3e5f67d391.strapiapp.com/api/products?populate=*",
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -259,9 +256,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           return {
             id: item?.id?.toString() || Math.random().toString(),
             slug: slugify(name),
-            productImage: firstImage?.url
-              ? `http://localhost:1337${firstImage.url}`
-              : undefined,
+            // Updated to use the full cloud URL directly from the API response
+            productImage: firstImage?.url || undefined,
             productBrand: item?.productBrand || undefined,
             documentId: item?.documentId || "",
             productPrice: item?.productPrice || undefined,
@@ -312,14 +308,14 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           >
             <path
               fillRule="evenodd"
-              d="M10 2L3 7v11a2 2 0 002 2h10a2 2 0 002-2V7l-7-5zM8 15v-3a2 2 0 014 0v3H8z"
+              d="M10 2L3 7v11a2 2 0 002 2h10a2 2 0 002 2V7l-7-5zM8 15v-3a2 2 0 014 0v3H8z"
               clipRule="evenodd"
             />
           </svg>
         </div>
         <p className="text-lg font-medium">No products found</p>
         <p className="text-gray-400 mt-1">
-          Make sure your Strapi server is running and has product data.
+          Check your Strapi Cloud connection and ensure product data exists.
         </p>
         <button
           onClick={fetchProducts}

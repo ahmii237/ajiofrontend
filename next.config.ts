@@ -3,11 +3,14 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "1337",
+        protocol: "https",
+        hostname: "majestic-symphony-3e5f67d391.media.strapiapp.com",
+        port: "",
+        pathname: "/**",
       },
     ],
+    // Alternative legacy format (if using older Next.js version):
+    // domains: ['majestic-symphony-3e5f67d391.media.strapiapp.com'],
   },
 };
 

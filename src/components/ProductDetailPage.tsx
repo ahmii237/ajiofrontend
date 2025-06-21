@@ -171,8 +171,9 @@ const ProductDetailPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
+      // Updated API URL to use cloud endpoint
       const response = await fetch(
-        `http://localhost:1337/api/products/${documentId}?populate=*`,
+        `https://majestic-symphony-3e5f67d391.strapiapp.com/api/products?populate=*&filters[documentId][$eq]=${documentId}`,
         {
           method: "GET",
           headers: {
@@ -191,20 +192,13 @@ const ProductDetailPage: React.FC = () => {
       const data = await response.json();
       console.log("Full API Response:", JSON.stringify(data, null, 2));
 
-      // Fix: Better handling of API response structure
-      let item: StrapiProduct;
-
-      if (data.data) {
-        // Standard Strapi v4 response format
-        item = data.data;
-      } else if (data.id) {
-        // Direct object response
-        item = data;
-      } else {
-        console.error("Unexpected API response structure:", data);
-        throw new Error("Invalid API response structure");
+      // Handle the API response structure - it returns an array in data
+      if (!data.data || !Array.isArray(data.data) || data.data.length === 0) {
+        throw new Error("Product not found");
       }
 
+      // Get the first product from the filtered results
+      const item: StrapiProduct = data.data[0];
       console.log("Product item:", item);
 
       if (!item || !item.documentId) {
@@ -224,7 +218,7 @@ const ProductDetailPage: React.FC = () => {
         productDescription: item.productDescription,
         productImages:
           item.productImage && item.productImage.length > 0
-            ? item.productImage.map((img) => `http://localhost:1337${img.url}`)
+            ? item.productImage.map((img) => img.url) // Use the full URL from cloud
             : [],
         ratingCount: item.SoldProducts || 0,
       };
